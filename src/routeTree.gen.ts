@@ -13,75 +13,133 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as notbrokenrouteWorkingRouteImport } from './routes/(not_broken_route)/working/route'
-import { Route as brokenrouteBrokenRouteImport } from './routes/(broken_route)/broken/route'
-import { Route as notbrokenrouteWorkingAnyImport } from './routes/(not_broken_route)/working/$any'
+import { Route as ParamRouteImport } from './routes/param/route'
+import { Route as LazyparamRouteImport } from './routes/lazy_param/route'
+import { Route as ParamAnyImport } from './routes/param/$any'
+import { Route as notbrokenrouteGroupparamRouteImport } from './routes/(not_broken_route)/group_param/route'
+import { Route as brokenrouteGrouplazyparamRouteImport } from './routes/(broken_route)/group_lazy_param/route'
+import { Route as notbrokenrouteGroupparamAnyImport } from './routes/(not_broken_route)/group_param/$any'
 
 // Create Virtual Routes
 
-const brokenrouteBrokenAnyLazyImport = createFileRoute(
-  '/(broken_route)/broken/$any',
+const LazyparamAnyLazyImport = createFileRoute('/lazy_param/$any')()
+const brokenrouteGrouplazyparamAnyLazyImport = createFileRoute(
+  '/(broken_route)/group_lazy_param/$any',
 )()
 
 // Create/Update Routes
 
-const notbrokenrouteWorkingRouteRoute = notbrokenrouteWorkingRouteImport.update(
-  {
-    path: '/working',
-    getParentRoute: () => rootRoute,
-  } as any,
-)
-
-const brokenrouteBrokenRouteRoute = brokenrouteBrokenRouteImport.update({
-  path: '/broken',
+const ParamRouteRoute = ParamRouteImport.update({
+  path: '/param',
   getParentRoute: () => rootRoute,
 } as any)
 
-const brokenrouteBrokenAnyLazyRoute = brokenrouteBrokenAnyLazyImport
-  .update({
-    path: '/$any',
-    getParentRoute: () => brokenrouteBrokenRouteRoute,
-  } as any)
-  .lazy(() =>
-    import('./routes/(broken_route)/broken/$any.lazy').then((d) => d.Route),
-  )
-
-const notbrokenrouteWorkingAnyRoute = notbrokenrouteWorkingAnyImport.update({
-  path: '/$any',
-  getParentRoute: () => notbrokenrouteWorkingRouteRoute,
+const LazyparamRouteRoute = LazyparamRouteImport.update({
+  path: '/lazy_param',
+  getParentRoute: () => rootRoute,
 } as any)
+
+const LazyparamAnyLazyRoute = LazyparamAnyLazyImport.update({
+  path: '/$any',
+  getParentRoute: () => LazyparamRouteRoute,
+} as any).lazy(() =>
+  import('./routes/lazy_param/$any.lazy').then((d) => d.Route),
+)
+
+const ParamAnyRoute = ParamAnyImport.update({
+  path: '/$any',
+  getParentRoute: () => ParamRouteRoute,
+} as any)
+
+const notbrokenrouteGroupparamRouteRoute =
+  notbrokenrouteGroupparamRouteImport.update({
+    path: '/group_param',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const brokenrouteGrouplazyparamRouteRoute =
+  brokenrouteGrouplazyparamRouteImport.update({
+    path: '/group_lazy_param',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const brokenrouteGrouplazyparamAnyLazyRoute =
+  brokenrouteGrouplazyparamAnyLazyImport
+    .update({
+      path: '/$any',
+      getParentRoute: () => brokenrouteGrouplazyparamRouteRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(broken_route)/group_lazy_param/$any.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+
+const notbrokenrouteGroupparamAnyRoute =
+  notbrokenrouteGroupparamAnyImport.update({
+    path: '/$any',
+    getParentRoute: () => notbrokenrouteGroupparamRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(broken_route)/broken': {
-      id: '/broken'
-      path: '/broken'
-      fullPath: '/broken'
-      preLoaderRoute: typeof brokenrouteBrokenRouteImport
+    '/lazy_param': {
+      id: '/lazy_param'
+      path: '/lazy_param'
+      fullPath: '/lazy_param'
+      preLoaderRoute: typeof LazyparamRouteImport
       parentRoute: typeof rootRoute
     }
-    '/(not_broken_route)/working': {
-      id: '/working'
-      path: '/working'
-      fullPath: '/working'
-      preLoaderRoute: typeof notbrokenrouteWorkingRouteImport
+    '/param': {
+      id: '/param'
+      path: '/param'
+      fullPath: '/param'
+      preLoaderRoute: typeof ParamRouteImport
       parentRoute: typeof rootRoute
     }
-    '/(not_broken_route)/working/$any': {
-      id: '/working/$any'
-      path: '/$any'
-      fullPath: '/working/$any'
-      preLoaderRoute: typeof notbrokenrouteWorkingAnyImport
-      parentRoute: typeof notbrokenrouteWorkingRouteImport
+    '/(broken_route)/group_lazy_param': {
+      id: '/group_lazy_param'
+      path: '/group_lazy_param'
+      fullPath: '/group_lazy_param'
+      preLoaderRoute: typeof brokenrouteGrouplazyparamRouteImport
+      parentRoute: typeof rootRoute
     }
-    '/(broken_route)/broken/$any': {
-      id: '/broken/$any'
+    '/(not_broken_route)/group_param': {
+      id: '/group_param'
+      path: '/group_param'
+      fullPath: '/group_param'
+      preLoaderRoute: typeof notbrokenrouteGroupparamRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/param/$any': {
+      id: '/param/$any'
       path: '/$any'
-      fullPath: '/broken/$any'
-      preLoaderRoute: typeof brokenrouteBrokenAnyLazyImport
-      parentRoute: typeof brokenrouteBrokenRouteImport
+      fullPath: '/param/$any'
+      preLoaderRoute: typeof ParamAnyImport
+      parentRoute: typeof ParamRouteImport
+    }
+    '/lazy_param/$any': {
+      id: '/lazy_param/$any'
+      path: '/$any'
+      fullPath: '/lazy_param/$any'
+      preLoaderRoute: typeof LazyparamAnyLazyImport
+      parentRoute: typeof LazyparamRouteImport
+    }
+    '/(not_broken_route)/group_param/$any': {
+      id: '/group_param/$any'
+      path: '/$any'
+      fullPath: '/group_param/$any'
+      preLoaderRoute: typeof notbrokenrouteGroupparamAnyImport
+      parentRoute: typeof notbrokenrouteGroupparamRouteImport
+    }
+    '/(broken_route)/group_lazy_param/$any': {
+      id: '/group_lazy_param/$any'
+      path: '/$any'
+      fullPath: '/group_lazy_param/$any'
+      preLoaderRoute: typeof brokenrouteGrouplazyparamAnyLazyImport
+      parentRoute: typeof brokenrouteGrouplazyparamRouteImport
     }
   }
 }
@@ -89,12 +147,18 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  brokenrouteBrokenRouteRoute: brokenrouteBrokenRouteRoute.addChildren({
-    brokenrouteBrokenAnyLazyRoute,
+  LazyparamRouteRoute: LazyparamRouteRoute.addChildren({
+    LazyparamAnyLazyRoute,
   }),
-  notbrokenrouteWorkingRouteRoute: notbrokenrouteWorkingRouteRoute.addChildren({
-    notbrokenrouteWorkingAnyRoute,
-  }),
+  ParamRouteRoute: ParamRouteRoute.addChildren({ ParamAnyRoute }),
+  brokenrouteGrouplazyparamRouteRoute:
+    brokenrouteGrouplazyparamRouteRoute.addChildren({
+      brokenrouteGrouplazyparamAnyLazyRoute,
+    }),
+  notbrokenrouteGroupparamRouteRoute:
+    notbrokenrouteGroupparamRouteRoute.addChildren({
+      notbrokenrouteGroupparamAnyRoute,
+    }),
 })
 
 /* prettier-ignore-end */
@@ -105,29 +169,51 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/broken",
-        "/working"
+        "/lazy_param",
+        "/param",
+        "/group_lazy_param",
+        "/group_param"
       ]
     },
-    "/broken": {
-      "filePath": "(broken_route)/broken/route.tsx",
+    "/lazy_param": {
+      "filePath": "lazy_param/route.tsx",
       "children": [
-        "/broken/$any"
+        "/lazy_param/$any"
       ]
     },
-    "/working": {
-      "filePath": "(not_broken_route)/working/route.tsx",
+    "/param": {
+      "filePath": "param/route.tsx",
       "children": [
-        "/working/$any"
+        "/param/$any"
       ]
     },
-    "/working/$any": {
-      "filePath": "(not_broken_route)/working/$any.tsx",
-      "parent": "/working"
+    "/group_lazy_param": {
+      "filePath": "(broken_route)/group_lazy_param/route.tsx",
+      "children": [
+        "/group_lazy_param/$any"
+      ]
     },
-    "/broken/$any": {
-      "filePath": "(broken_route)/broken/$any.lazy.tsx",
-      "parent": "/broken"
+    "/group_param": {
+      "filePath": "(not_broken_route)/group_param/route.tsx",
+      "children": [
+        "/group_param/$any"
+      ]
+    },
+    "/param/$any": {
+      "filePath": "param/$any.tsx",
+      "parent": "/param"
+    },
+    "/lazy_param/$any": {
+      "filePath": "lazy_param/$any.lazy.tsx",
+      "parent": "/lazy_param"
+    },
+    "/group_param/$any": {
+      "filePath": "(not_broken_route)/group_param/$any.tsx",
+      "parent": "/group_param"
+    },
+    "/group_lazy_param/$any": {
+      "filePath": "(broken_route)/group_lazy_param/$any.lazy.tsx",
+      "parent": "/group_lazy_param"
     }
   }
 }

@@ -5,11 +5,17 @@ export const Route = createRootRoute({
   component: () => (
     <React.Fragment>
       <div style={{ display: 'flex', gap: '1rem' }}>
-        <Link to="/working/$any" params={{ any: 'yay' }}>
-          Working
+        <Link to="/group_param/$any" params={{ any: 'test' }}>
+          Group w/ Param
         </Link>
-        <Link to="/broken/$any" params={{ any: 'yay' }}>
-          Broken
+        <Link to="/group_lazy_param/$any" params={{ any: 'test' }}>
+          Group w/ Lazy Param
+        </Link>
+        <Link to="/param/$any" params={{ any: 'test' }}>
+          Param
+        </Link>
+        <Link to="/lazy_param/$any" params={{ any: 'test' }}>
+          Lazy Param
         </Link>
       </div>
       <Outlet />

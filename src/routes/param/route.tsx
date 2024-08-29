@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(broken_route)/broken')({
+export const Route = createFileRoute('/param')({
   component: () => <Outlet />,
 })

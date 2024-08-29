@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(not_broken_route)/working')({
+export const Route = createFileRoute('/lazy_param')({
   component: () => <Outlet />,
 })

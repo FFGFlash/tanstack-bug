@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 
-export const Route = createLazyFileRoute('/(broken_route)/broken/$any')({
+export const Route = createLazyFileRoute('/(broken_route)/group_lazy_param/$any')({
   component: RouteComponent,
 })
 

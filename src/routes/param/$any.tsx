@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(not_broken_route)/working/$any')({
+export const Route = createFileRoute('/param/$any')({
   component: RouteComponent,
 })
 
